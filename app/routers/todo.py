@@ -8,6 +8,8 @@ from typing import Annotated
 from fastapi import status
 from fastapi.responses import HTMLResponse, RedirectResponse
 from app.utilities import flash
+from . import templates
+
 
 todo_router = APIRouter(tags=["Todo Management"])
 
@@ -20,3 +22,28 @@ def create_todo_action(request: Request, text: Annotated[str, Form()], db:Sessio
 async def toggle_todo_action(request: Request, id: int, db:SessionDep, user:AuthDep):
     # Implement task 5.1 here. Remove the line below that says "pass" once complete
     pass
+
+@todo_router.post('/editTodo/{id}')
+def edit_todo_action(request: Request, id: int, text: Annotated[str, Form()], db:SessionDep, user:AuthDep):
+    # Implement task 5.2 here. Remove the line below that says "pass" once complete
+    pass
+
+@todo_router.get('/editTodo/{id}')
+def edit_todo_page(request: Request, id: int, db:SessionDep, user:AuthDep):
+    todo = db.exec(select(Todo).where(Todo.id == id, Todo.user_id == user.id)).one_or_none()
+    todos = []
+
+    if not todo:
+        flash(request, 'Invalid id or unauthorized')
+    else:
+        todos = user.todos
+    
+    return templates.TemplateResponse(
+        request=request, 
+        name="edit.html",
+        context={
+            "current_user": user,
+            "todo": todo,
+            "todos": todos
+        }
+    )
