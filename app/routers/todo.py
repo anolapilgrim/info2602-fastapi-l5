@@ -15,3 +15,8 @@ todo_router = APIRouter(tags=["Todo Management"])
 def create_todo_action(request: Request, text: Annotated[str, Form()], db:SessionDep, user:AuthDep):
     # Implement task 4.2 here. Remove the line below that says "pass" once complete
     pass
+
+@todo_router.post('/toggle/{id}')
+async def toggle_todo_action(request: Request, id: int, db:SessionDep, user:AuthDep):
+    # Implement task 5.1 here. Remove the line below that says "pass" once complete
+    pass
